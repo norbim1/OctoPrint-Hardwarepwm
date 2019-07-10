@@ -6,7 +6,7 @@ plugin_package = "octoprint_hardwarepwm"
 
 plugin_name = "OctoPrint-Hardwarepwm"
 
-plugin_version = "0.1.1.2"
+plugin_version = "0.1.1.2.A"
 
 plugin_description = """Raspberry Pi Hardware PWM """
 
@@ -14,7 +14,7 @@ plugin_author = "Dario Rostirolla"
 
 plugin_author_email = "rostirolladario@gmail.com"
 
-plugin_url = "https://github.com/pastapojken/OctoPrint-Hardwarepwm"
+plugin_url = "https://github.com/norbim1/OctoPrint-Hardwarepwm"
 
 plugin_license = "AGPLv3"
 

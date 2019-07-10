@@ -8,7 +8,8 @@ class HardwarepwmPlugin(octoprint.plugin.SettingsPlugin,
                         octoprint.plugin.StartupPlugin,
 			octoprint.plugin.ShutdownPlugin,
 			octoprint.plugin.BlueprintPlugin,
-                        octoprint.plugin.TemplatePlugin):
+                        octoprint.plugin.TemplatePlugin,
+                        octoprint.plugin.SimpleApiPlugin):
 
     def __init__(self):
 	self.IOpin = 19
@@ -61,6 +62,31 @@ class HardwarepwmPlugin(octoprint.plugin.SettingsPlugin,
 	self.stopPWM(self.IOpin)
         self.getVars()
         self.startPWM(self.IOpin, self.Freq, self.dutyCycle)
+
+    def get_api_commands(self):
+        return dict(
+            command1=[],
+            setdutycycle=["dutycycle"]
+        )
+
+    def on_api_command(self, command, data):
+        import flask
+        if command == "command1":
+            parameter = "unset"
+            if "parameter" in data:
+                parameter = "set"
+            self._logger.info("command1 called, parameter is {parameter}".format(**locals()))
+        elif command == "setdutycycle":
+            new_cycle = float(data.get("dutycycle"))
+            self.dutyCycle = new_cycle
+            self._settings.set(["dutyCycle"], new_cycle)
+            self._settings.save()
+            self.getVars()
+            self.startPWM(self.IOpin, self.Freq, self.dutyCycle)
+            self._logger.info("setdutycycle called, dutycycle is {dutycycle}".format(**data))
+            
+    def on_api_get(self, request):
+        return flask.jsonify(dutycycle=float(self._settings.get(["dutyCycle"])))
 
     def get_assets(self):
 	return dict(
